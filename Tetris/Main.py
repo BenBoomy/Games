@@ -1,3 +1,15 @@
+#########################################
+# ##### ##### ##### ####   #####  ##### #
+#   #   #       #   #   #    #    #     #
+#   #   ###     #   ####     #    ##### #
+#   #   #       #   # #      #        # #
+#   #   #####   #   #  #   #####  ##### #
+#########################################
+
+
+
+##### Imports #####
+
 import pygame as pg
 import random
 import time as t
@@ -136,7 +148,6 @@ def contact():
             sprite.rect.y -= length
             player_sprites.remove(sprite)
             bottom_sprites.add(sprite)
-            
         tetramino()
             
 def down():
@@ -144,6 +155,31 @@ def down():
     if not collision:
         for sprite in player_sprites:
             sprite.rect.y += length            
+
+def rotate():
+   x1 = 500
+   y1 = 800
+   x2 = 0
+   y2 = 0
+   
+   for sprite in player_sprites:
+      if sprite.rect.x < x1:
+         x1 = sprite.rect.x
+      if sprite.rect.x > x2:
+         x2 = sprite.rect.x
+         
+      if sprite.rect.y < y1:
+         y1 = sprite.rect.y
+      if sprite.rect.y > y2:
+         y2 = sprite.rect.y
+
+   point_1 = [x1, y1]
+   point_2 = [x2, y2]
+
+   for point in player_sprites:
+      point.rect.x 
+
+   
 
 ##### Init #####
        
