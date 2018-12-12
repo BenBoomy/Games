@@ -16,8 +16,6 @@ class Block(pg.sprite.Sprite):
 
         self.x = x
         self.y = y
-##        all_sprites.add(self)
-##        player_sprites.add(self)
 
     def left(self):
         self.rect.x -= self.length
