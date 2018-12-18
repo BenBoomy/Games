@@ -5,7 +5,7 @@ class Wall(pg.sprite.Sprite):
    def __init__(self, x):
 
       pg.sprite.Sprite.__init__(self)
-      self.image = pg.Surface((100, 800))
+      self.image = pg.Surface((50, 900))
       self.image.fill((255, 255, 255))
 
       self.rect = self.image.get_rect()
