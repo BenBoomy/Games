@@ -16,7 +16,6 @@ class Block(pg.sprite.Sprite):
 
         self.x = int(x)
         self.y = int(y)
-        print self.x, self.y
 
     def left(self):
         self.rect.x -= self.length
@@ -26,6 +25,7 @@ class Block(pg.sprite.Sprite):
 
     def down(self):
         self.rect.y += self.length
+
         
         
     
