@@ -6,6 +6,8 @@
 #   #   #####   #   #  #   #####  ##### #
 #########################################
 
+# Credit to Al Sweigart for inspiration for block init
+
 
 ##### Import #####
 
@@ -16,6 +18,7 @@ import time
 
 from Block import Block
 from Wall import Wall
+from Bottom import Bottom
 
 ##### Initialising #####
 
@@ -24,28 +27,159 @@ player_objects = pygame.sprite.Group()
 player_blocks = []
 bottom_objects = pygame.sprite.Group()
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-ORANGE = (255, 128, 0)
-MAGENTA = (255, 0, 255)
-BLUE = (0, 0, 255)
-GREEN = (0, 255, 0)
-OLIVE = (128, 128, 0)
-CYAN = (0, 255, 255)
+### Colours ###
+#           R    G     B
+BLACK   = (  0,   0,   0)
+WHITE   = (255, 255, 255)
+RED     = (255,   0,   0)
+ORANGE  = (255, 128,   0)
+MAGENTA = (255,   0, 255)
+BLUE    = (  0,   0, 255)
+GREEN   = (  0, 255,   0)
+OLIVE   = (128, 128,   0)
+CYAN    = (  0, 255, 255)
+
+### Block Patterns ###
+
+Shape_Template_1 = [['.....',
+                     '.....',
+                     '..OO.',
+                     '.OO..',
+                     '.....'],
+                    ['.....',
+                     '..O..',
+                     '..OO.',
+                     '...O.',
+                     '.....']]
+
+Shape_Template_2 = [['.....',
+                     '.....',
+                     '.OO..',
+                     '..OO.',
+                     '.....'],
+                    ['.....',
+                     '..O..',
+                     '.OO..',
+                     '.O...',
+                     '.....']]
+
+Shape_Template_3 = [['..O..',
+                     '..O..',
+                     '..O..',
+                     '..O..',
+                     '.....'],
+                    ['.....',
+                     '.....',
+                     'OOOO.',
+                     '.....',
+                     '.....']]
+
+Shape_Template_4 = [['.....',
+                     '.....',
+                     '.OO..',
+                     '.OO..',
+                     '.....']]
+
+Shape_Template_5 = [['.....',
+                     '.O...',
+                     '.OOO.',
+                     '.....',
+                     '.....'],
+                    ['.....',
+                     '..OO.',
+                     '..O..',
+                     '..O..',
+                     '.....'],
+                    ['.....',
+                     '.....',
+                 WHITE       = (255, 255, 255)
+GRAY        = (185, 185, 185)
+BLACK       = (  0,   0,   0)
+RED         = (155,   0,   0)
+LIGHTRED    = (175,  20,  20)
+GREEN       = (  0, 155,   0)
+LIGHTGREEN  = ( 20, 175,  20)
+BLUE        = (  0,   0, 155)
+LIGHTBLUE   = ( 20,  20, 175)
+YELLOW      = (155, 155,   0)
+LIGHTYELLOW = (175, 175,  20)    '.OOO.',
+                     '...O.',
+                     '.....'],
+                    ['.....',
+                     '..O..',
+                     '..O..',
+                     '.OO..',
+                     '.....']]
+
+Shape_Template_6 = [['.....',
+                     '...O.',
+                     '.OOO.',
+                     '.....',
+                     '.....'],
+                    ['.....',
+                     '..O..',
+                     '..O..',
+                     '..OO.',
+                     '.....'],
+                    ['.....',
+                     '.....',
+                     '.OOO.',
+                     '.O...',
+                     '.....'],
+                    ['.....',
+                     '.OO..',
+                     '..O..',
+                     '..O..',
+                     '.....']]
+
+Shape_Template_7 = [['.....',
+                     '..O..',
+                     '.OOO.',
+                     '.....',
+                     '.....'],
+                    ['.....',
+                     '..O..',
+                     '..OO.',
+                     '..O..',
+                     '.....'],
+                    ['.....',
+                     '.....',
+                     '.OOO.',
+                     '..O..',
+                     '.....'],
+                    ['.....',
+                     '..O..',
+                     '.OO..',
+                     '..O..',
+                     '.....']]
+
+TETRAMINOS = {1: Shape_Template_1,
+              2: Shape_Template_2,
+              3: Shape_Template_3,
+              4: Shape_Template_4,
+              5: Shape_Template_5,
+              6: Shape_Template_6,
+              7: Shape_Template_7}
+                     
 
 ##### Functions #####
 
-def list2matrix():
-    matrix = [None] * 2
+##def list2matrix():
+##    matrix = [None] * 2
+##
+##    for i in range(len(matrix)):
+##        matrix[i] = [None] * 4
+##
+##    for i in player_blocks:
+##        matrix[i.y][i.x] = i
+##
+##    return matrix
 
-    for i in range(len(matrix)):
-        matrix[i] = [None] * 4
 
-    for i in player_blocks:
-        matrix[i.y][i.x] = i
-    return matrix
-
+def createBoard():
+    #data structure for storage of pieces in play
+    board = []
+    for i in range
 def createPiece(colour, pos1, pos2, pos3, pos4):
     block_1 = Block(pos1[0], pos1[1], colour)
     block_2 = Block(pos2[0], pos2[1], colour)
@@ -75,13 +209,6 @@ def turnPiece(matrix, direction):
                         print item.rect.y
                     except AttributeError:
                         pass
-            print matrix
-##            for i in matrix:
-##                for j in i:
-##                    try:
-##                        print matrix[i][j]
-##                    except:
-##                        print "wassup"
             corner = matrix[0][0]
         elif idx == 2: #means piece is in left position
             corner = matrix[0][3]
@@ -132,7 +259,7 @@ def newPiece():
 def main():
     pygame.init()
     pygame.display.init()
-    screen = pygame.display.set_mode((600, 1000))
+    screen = pygame.display.set_mode((600, 950))
     gameLoop = True
     t1 = 0
     
@@ -143,17 +270,17 @@ def main():
     left_wall = Wall(0)
     all_objects.add(right_wall)
     all_objects.add(left_wall)
+    bottom = Bottom(WHITE)
+    all_objects.add(bottom)
     
-##    newPiece()
-##    matrix = list2matrix()
-
     while gameLoop:
         if len(player_blocks) == 0:
             newPiece()
             matrix = list2matrix()
             
         for block in player_objects:
-            if block.rect.y >= 875:
+            if bottom.rect.contains(block) or\
+               pygame.sprite.spritecollideany(block, bottom_objects):
                 player_objects.empty()
                 bottom_objects.add(block)
                 player_blocks[:] = []
