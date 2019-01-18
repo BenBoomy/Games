@@ -16,11 +16,23 @@ LIGHTBLUE   = ( 20,  20, 175)
 YELLOW      = (155, 155,   0)
 LIGHTYELLOW = (175, 175,  20)
 
+COLOURS = {
+    WHITE: (255, 255, 255),
+    GRAY: (185, 185, 185),
+    BLACK: (0, 0, 0),
+    RED: (155, 0, 0),
+    LIGHTRED: (175, 20, 20),
+    GREEN: ( 0, 155, 0),
+    LIGHTGREEN: (20, 175, 20),
+    BLUE: (0, 0, 155),
+    LIGHTBLUE: (20, 20, 175),
+    YELLOW: (155, 155, 0),
+    LIGHTYELLOW: (175, 175, 20)}
 ### Setup ###
 
 SCREENWIDTH = 400
 SCREENHEIGHT = 800
-
+SURF = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
 GameLoop = True
 
 ##### Functions #####
@@ -32,15 +44,47 @@ def main():
     pygame.display.init()
     SURF = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
     pygame.display.set_caption("Game")
-    
+
+    note = Note(1, 440, 60)
     while GameLoop:
-        
+        note.advance()
         for event in pygame.event.get():
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_ESCAPE:
                     terminate()
-
+        SURF.fill(BLACK)
+        time.sleep(1)
 def terminate():
     pygame.quit()
+
+##### Classes #####
+
+class Note():
+
+    def __init__(self, value, pitch, bpm):
+
+        self.value = int(value)
+        self.pitch = int(pitch)
+        self.bpm = int(bpm)
+        self.length = value * 50
+        self.y = 0 - self.length
         
+        if random.randint(0, 1) == 0:
+            self.x_pos = "left"
+        else:
+            self.x_pos = "right"
+
+    def advance(self):
+        self.y += self.length
+        global SURF
+        
+        if self.x_pos == "left":
+            rect = pygame.Rect(0, self.y, 200, self.length)
+        else:
+            rect = pygame.Rect(200, self.y, 200, self.length)
+
+        pygame.draw.rect(SURF, COLOURS[random.choice(COLOURS)-1], rect)
+            
+        
+
 main()
