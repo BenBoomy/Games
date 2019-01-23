@@ -17,23 +17,25 @@ YELLOW      = (155, 155,   0)
 LIGHTYELLOW = (175, 175,  20)
 
 COLOURS = {
-    WHITE: (255, 255, 255),
-    GRAY: (185, 185, 185),
-    BLACK: (0, 0, 0),
-    RED: (155, 0, 0),
-    LIGHTRED: (175, 20, 20),
-    GREEN: ( 0, 155, 0),
-    LIGHTGREEN: (20, 175, 20),
-    BLUE: (0, 0, 155),
-    LIGHTBLUE: (20, 20, 175),
-    YELLOW: (155, 155, 0),
-    LIGHTYELLOW: (175, 175, 20)}
+    1: (255, 255, 255),
+    2: (185, 185, 185),
+    3: (0, 0, 0),
+    4: (155, 0, 0),
+    5: (175, 20, 20),
+    6: (0, 155, 0),
+    7: (20, 175, 20),
+    8: (0, 0, 155),
+    9: (20, 20, 175),
+    10: (155, 155, 0),
+    11: (175, 175, 20)}
 ### Setup ###
 
 SCREENWIDTH = 400
 SCREENHEIGHT = 800
 SURF = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
 GameLoop = True
+
+notes = pygame.sprite.Group()
 
 ##### Functions #####
 
@@ -44,47 +46,62 @@ def main():
     pygame.display.init()
     SURF = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
     pygame.display.set_caption("Game")
-
-    note = Note(1, 440, 60)
+    current_time = time.time()
+    
     while GameLoop:
-        note.advance()
+
+        for note in notes:
+            note.advance()
+            time.sleep(1)
+            
         for event in pygame.event.get():
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_ESCAPE:
                     terminate()
+                    
         SURF.fill(BLACK)
-        time.sleep(1)
+        notes.update()
+        notes.draw(SURF)
+        pygame.display.flip()
+    
 def terminate():
     pygame.quit()
 
-##### Classes #####
+def addNote(difficulty, time_since_last):
+    if time.time()-time_since_last >= 5:
+        note = Note(1, 440, 60)
+        notes.add(note)
+        time_since_last = time.time()
 
-class Note():
-
+class Note(pygame.sprite.Sprite):
+    
     def __init__(self, value, pitch, bpm):
-
+        
         self.value = int(value)
         self.pitch = int(pitch)
         self.bpm = int(bpm)
         self.length = value * 50
-        self.y = 0 - self.length
+        colour = random.randint(1, 11)
+        self.colour = COLOURS[colour]
+        self.time = time.time()
+
         
+        pygame.sprite.Sprite.__init__(self)
+        
+        self.image = pygame.Surface((200, self.length))
+        self.image.fill(self.colour)
+        self.rect = self.image.get_rect()
+
         if random.randint(0, 1) == 0:
             self.x_pos = "left"
+            self.rect.x = 0
         else:
             self.x_pos = "right"
+            self.rect.x = 200
 
+        self.rect.y = 0 - self.length
+        
     def advance(self):
-        self.y += self.length
-        global SURF
-        
-        if self.x_pos == "left":
-            rect = pygame.Rect(0, self.y, 200, self.length)
-        else:
-            rect = pygame.Rect(200, self.y, 200, self.length)
-
-        pygame.draw.rect(SURF, COLOURS[random.choice(COLOURS)-1], rect)
-            
-        
+        self.rect.y += self.length
 
 main()
